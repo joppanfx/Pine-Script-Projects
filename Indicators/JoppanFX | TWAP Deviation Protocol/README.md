@@ -70,7 +70,7 @@ Band contraction signals a **volatility squeeze**, often preceding a breakout.
 ---
 
 ## 📝 Installation
-1. Copy the source code from the `indicators/` folder  
+1. Copy the source code from the `Indicators/` folder  
 2. Open **Pine Editor** in TradingView  
 3. Paste the code and click **"Add to Chart"**
 
