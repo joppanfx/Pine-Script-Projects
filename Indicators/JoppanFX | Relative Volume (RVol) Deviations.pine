@@ -1,5 +1,5 @@
 //@version=6
-indicator("High Volume Surge Pro", overlay=true, max_labels_count=500)
+indicator("JoppanFX | Relative Volume (RVol) Deviations", overlay=true, max_labels_count=500)
 
 // --- Inputs ---
 var group_vol  = "Volume Settings"
