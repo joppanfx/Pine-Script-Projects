@@ -1,4 +1,4 @@
-# 🌌 JoppanFX: Quant-Driven Trading Protocols
+# 📕 JoppanFX: Quant-Driven Trading Protocols
 
 **JoppanFX** is an open-source research initiative focused on developing high-precision technical indicators and quantitative trading strategies.  
 
