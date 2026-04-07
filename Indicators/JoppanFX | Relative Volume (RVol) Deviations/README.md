@@ -1,4 +1,4 @@
-# 📕 JoppanFX: Relative Volume (RVol) Deviations
+# 📕 JoppanFX | Relative Volume (RVol) Deviations
 
 ## 📸 Interface Visualization
 ![JoppanFX RVol Deviations](./Assets/JoppanFX%20%7C%20Relative%20Volume%20(RVol)%20Deviations.png)
