@@ -27,7 +27,7 @@ By integrating:
 - Rolling **Time-Weighted Average Price (TWAP)**  
 - Dynamic **volatility envelopes**  
 
-…it identifies high-probability **mean-reversion zones**.
+it identifies high-probability **mean-reversion zones**.
 
 ---
 
