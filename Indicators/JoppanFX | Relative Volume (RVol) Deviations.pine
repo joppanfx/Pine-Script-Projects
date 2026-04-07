@@ -1,0 +1,46 @@
+//@version=6
+indicator("High Volume Surge Pro", overlay=true, max_labels_count=500)
+
+// --- Inputs ---
+var group_vol  = "Volume Settings"
+len            = input.int(60, "Lookback Period", minval=1, group=group_vol)
+mult           = input.float(2.5, "Volume Multiplier", step=0.1, group=group_vol)
+
+var group_vis  = "Visuals"
+bullColor      = input.color(color.new(#00ff08, 0), "High Vol Bullish", group=group_vis)
+bearColor      = input.color(color.new(#ff0055, 0), "High Vol Bearish", group=group_vis)
+showLabels     = input.bool(true, "Show Volume Labels", group=group_vis)
+labelOffset    = input.int(10, "Label Offset (Points)", minval=0, group=group_vis)
+
+// --- Calculations ---
+avgVol       = ta.sma(volume, len)
+isHighVolume = volume > (avgVol * mult)
+
+// Logic for Bullish vs Bearish candles
+isBullish = isHighVolume and close > open
+isBearish = isHighVolume and close <= open
+
+// --- Watermark ---
+var testTable = table.new(position.bottom_right, 1, 1)
+if barstate.islast
+    table.cell(testTable, 0, 0, "joppanfx", text_color=color.new(color.white, 50), text_size=size.small)
+
+// --- Plotting ---
+// 1. Bar Coloring
+barcolor(isHighVolume ? (isBullish ? bullColor : bearColor) : na)
+
+// 2. Labels with Fixed Offset
+if isHighVolume and showLabels
+    volMultiplier = volume / avgVol
+    float offsetPrice = syminfo.mintick * labelOffset
+    
+    label.new(
+         x=bar_index, 
+         y=isBullish ? (low - offsetPrice) : (high + offsetPrice), 
+         text=str.format("{0,number,#.#}x", volMultiplier), 
+         style=isBullish ? label.style_label_up : label.style_label_down,
+         color=color.new(isBullish ? bullColor : bearColor, 20),
+         textcolor=color.white,
+         size=size.tiny,
+         yloc=yloc.price
+         )
