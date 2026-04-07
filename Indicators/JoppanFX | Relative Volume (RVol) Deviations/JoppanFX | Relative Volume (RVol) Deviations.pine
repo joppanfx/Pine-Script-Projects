@@ -1,7 +1,7 @@
 //@version=6
 // @description JoppanFX | Relative Volume (RVol) Deviations
 // @author JoppanFX
-// @documentation https://github.com/YourUsername/Pine-Script-Projects/tree/main/TWAP-Deviation-Protocol
+// @documentation https://github.com/joppanfx/Pine-Script-Projects/tree/main/Indicators/JoppanFX%20%7C%20Relative%20Volume%20(RVol)%20Deviations
 
 indicator("JoppanFX | Relative Volume (RVol) Deviations", overlay=true, max_labels_count=500)
 
