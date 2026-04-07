@@ -6,31 +6,6 @@ Our mission is to bridge the gap between **institutional-grade market microstruc
 
 ---
 
-## 🔬 Core Protocols
-
-### 📊 JoppanFX | Relative Volume (RVol) Deviations  
-**Liquidity Anomaly Detection**  
-A quantitative liquidity-tracking protocol that utilizes **statistical variance** to isolate institutional volume anomalies.  
-
-This system normalizes volume data to detect:
-- Smart money participation  
-- Climax events  
-- High-confidence liquidity spikes  
-
----
-
-### 📈 JoppanFX | TWAP Deviation Protocol  
-**Mean-Reversion Engine**  
-A statistically rigorous framework leveraging **Z-score equivalent modeling** to detect price-to-value divergence.  
-
-By integrating:
-- Rolling **Time-Weighted Average Price (TWAP)**  
-- Dynamic **volatility envelopes**  
-
-it identifies high-probability **mean-reversion zones**.
-
----
-
 ## 🛠 Strategic Architecture
 
 Each protocol within the **JoppanFX ecosystem** is built upon three foundational pillars:
