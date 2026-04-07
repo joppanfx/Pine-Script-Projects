@@ -1,4 +1,8 @@
 //@version=6
+// @description JoppanFX: TWAP Deviation Protocol
+// @author JoppanFX
+// @documentation https://github.com/YourUsername/Pine-Script-Projects/tree/main/TWAP-Deviation-Protocol
+
 indicator("JoppanFX: TWAP Deviation Protocol", overlay=true)
 
 // --- Inputs ---
