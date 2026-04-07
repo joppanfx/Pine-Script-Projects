@@ -1,44 +1,56 @@
-# 📕 JoppanFX: TWAP Deviation Protocol
+# 🩸 JoppanFX: Relative Volume (RVol) Deviations
 
 ## 📌 Overview
-The **JoppanFX: TWAP Deviation Protocol** is a quantitative volatility-tracking tool designed to identify price extremes relative to the **Time Weighted Average Price (TWAP)**.  
+The **JoppanFX: Relative Volume (RVol) Deviations** is a quantitative liquidity-tracking tool designed to identify **institutional participation** and **volume anomalies**.
 
-By integrating a rolling TWAP basis with dynamic **Standard Deviation bands**, this indicator provides a statistically grounded framework for identifying **overbought/oversold conditions** and **mean-reversion opportunities**.
+By comparing real-time volume against a rolling **Simple Moving Average (SMA)**, this indicator isolates **high-volume deviations**—periods where activity significantly exceeds the statistical norm.
 
-Unlike standard **Bollinger Bands**, this protocol utilizes the **OHLC4** (average of Open, High, Low, and Close) to deliver a smoother and more comprehensive representation of value distribution over a defined lookback period.
+This protocol is essential for identifying:
+- **Breakout confirmation**
+- **Climax reversals**
+- **Smart money positioning**
 
 ---
 
 ## 🛠 Technical Logic
-The protocol operates on three core mathematical pillars:
+The indicator evaluates volume intensity using three core components:
 
-### 1. TWAP Basis
-Calculates the moving average of the OHLC4 price point:
+### 1. Volume Basis
+Calculates the average volume over a specified lookback period ($n$):
 
 $$
-TWAP = \frac{1}{n} \sum_{i=0}^{n-1} \text{OHLC4}_i
+\text{Avg Volume} = \frac{1}{n} \sum_{i=0}^{n-1} \text{Volume}_i
 $$
 
-### 2. Volatility Expansion
-Measures the dispersion of price from the basis using **Standard Deviation ($\sigma$)**.
+### 2. Relative Deviation (RVol)
+Measures current volume relative to the historical average:
 
-### 3. Deviation Envelopes
-Projects upper and lower bands based on a user-defined multiplier (**Z-score equivalent**).
+$$
+\text{RVol Multiplier} = \frac{\text{Volume}_{\text{current}}}{\text{Avg Volume}}
+$$
+
+### 3. Threshold Logic
+Generates a signal when volume exceeds a defined multiplier ($M$):
+
+$$
+\text{Signal} = \text{Volume}_{\text{current}} > (\text{Avg Volume} \times M)
+$$
 
 ---
 
 ## 🚀 Key Features
-- **Rolling TWAP Basis**  
-  A custom-length baseline that tracks the *fair value* of the asset.
 
-- **Dynamic Volatility Bands**  
-  Real-time envelopes that expand and contract based on market conditions.
+- **Dynamic RVol Calculation**  
+  Normalizes volume across any timeframe, ensuring "high volume" is always context-aware.
 
-- **Visual Signal System**  
-  Automatic candle highlighting when price breaches statistical boundaries.
+- **Contextual Candle Coloring**  
+  Highlights bullish vs bearish high-volume candles to reveal buying or selling aggression.
+
+- **Real-Time Magnitude Labels**  
+  Displays exact volume multipliers (e.g., *3.2x*) for instant liquidity assessment.
 
 - **Quant-Grade Watermark**  
-  Clean, non-intrusive branding for professional chart presentation.
+  Clean, institutional-style branding for professional chart sharing.
 
 ---
 
@@ -46,26 +58,23 @@ Projects upper and lower bands based on a user-defined multiplier (**Z-score equ
 
 | Parameter           | Default | Description |
 |--------------------|--------|------------|
-| TWAP Lookback      | 48     | Number of periods used to calculate mean and deviation |
-| StdDev Multiplier  | 2.0    | Controls band width (~95% coverage at 2.0) |
-| Show Fill          | True   | Toggles shading between basis and bands |
+| Lookback Period    | 60     | Number of bars used to calculate average volume |
+| Volume Multiplier  | 2.5    | Threshold for deviation (e.g., 2.5× normal volume) |
+| Show Labels        | True   | Toggles multiplier display on chart |
+| Label Offset       | 10     | Controls vertical spacing of labels |
 
 ---
 
 ## 📈 How to Use
 
-### Mean Reversion
-When price closes outside:
-- **Upper Deviation (Red)**  
-- **Lower Deviation (Green)**  
+### Breakout Confirmation
+A breakout above resistance with a **Bullish RVol Deviation (Green Bar)** signals strong participation, increasing the likelihood of continuation.
 
-…it is statistically extended. Traders often anticipate a move back toward the **TWAP baseline**.
+### Climax Reversals
+Extreme spikes (e.g., **> 4.0×**) after extended trends often indicate exhaustion and potential **V-shaped reversals**.
 
-### Trend Strength
-Persistent movement along upper or lower bands indicates **strong directional momentum**.
-
-### Volatility Filter
-Band contraction signals a **volatility squeeze**, often preceding a breakout.
+### Institutional Absorption
+High-volume candles with small bodies (e.g., **Doji**) at key levels suggest **absorption**, where large players accumulate or distribute positions.
 
 ---
 
@@ -77,7 +86,7 @@ Band contraction signals a **volatility squeeze**, often preceding a breakout.
 ---
 
 ## ⚖️ License
-This project is part of the **JoppanFX Pine Script Projects** repository.  
+This project is part of the **JoppanFX Pine Script Projects** repository.
 
 - ✅ Individual use permitted  
 - ⚠️ For commercial use or derivative work, contact the repository owner
