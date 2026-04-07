@@ -37,9 +37,6 @@ Projects upper and lower bands based on a user-defined multiplier (**Z-score equ
 - **Visual Signal System**  
   Automatic candle highlighting when price breaches statistical boundaries.
 
-- **Quant-Grade Watermark**  
-  Clean, non-intrusive branding for professional chart presentation.
-
 ---
 
 ## ⚙️ Input Parameters
