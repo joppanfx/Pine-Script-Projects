@@ -59,7 +59,7 @@ When price closes outside:
 - **Upper Deviation (Red)**  
 - **Lower Deviation (Green)**  
 
-…it is statistically extended. Traders often anticipate a move back toward the **TWAP baseline**.
+it is statistically extended. Traders often anticipate a move back toward the **TWAP baseline**.
 
 ### Trend Strength
 Persistent movement along upper or lower bands indicates **strong directional momentum**.
