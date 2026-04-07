@@ -1,0 +1,48 @@
+//@version=6
+indicator("JoppanFX: TWAP Deviation Protocol", overlay=true)
+
+// --- Inputs ---
+var group_twap = "TWAP Configuration"
+twapLen        = input.int(48, "TWAP Lookback (Periods)", minval=1, group=group_twap)
+stdDevMult     = input.float(2.0, "Standard Deviation Multiplier", step=0.1, group=group_twap)
+
+var group_vis  = "Visuals"
+baseColor      = input.color(color.gray, "TWAP Baseline", group=group_vis)
+upperColor     = input.color(color.new(#ff0055, 0), "Upper Deviation", group=group_vis)
+lowerColor     = input.color(color.new(#00ff08, 0), "Lower Deviation", group=group_vis)
+showFill       = input.bool(true, "Show Deviation Shading", group=group_vis)
+
+// --- Calculations ---
+// 1. Calculate the TWAP (Simple Moving Average of OHLC4 acts as a rolling TWAP)
+twapBasis = ta.sma(ohlc4, twapLen)
+
+// 2. Calculate Standard Deviation
+stdDev = ta.stdev(ohlc4, twapLen)
+
+// 3. Define Bands
+upperBand = twapBasis + (stdDev * stdDevMult)
+lowerBand = twapBasis - (stdDev * stdDevMult)
+
+// --- Conditions ---
+isOverbought = close > upperBand
+isOversold   = close < lowerBand
+
+// --- Watermark ---
+var testTable = table.new(position.bottom_right, 1, 1)
+if barstate.islast
+    table.cell(testTable, 0, 0, "JoppanFX", text_color=color.new(color.white, 50), text_size=size.small)
+
+// --- Plotting ---
+// Plot the TWAP Core
+p_basis = plot(twapBasis, "TWAP Basis", color=baseColor, linewidth=2)
+
+// Plot the Deviation Bands
+p_upper = plot(upperBand, "Upper Deviation", color=upperColor, style=plot.style_linebr)
+p_lower = plot(lowerBand, "Lower Deviation", color=lowerColor, style=plot.style_linebr)
+
+// Professional Shading
+fill(p_upper, p_basis, color=showFill ? color.new(upperColor, 90) : na, title="Upper Fill")
+fill(p_lower, p_basis, color=showFill ? color.new(lowerColor, 90) : na, title="Lower Fill")
+
+// Highlight Candles on Extreme Deviations
+barcolor(isOverbought ? upperColor : isOversold ? lowerColor : na)
