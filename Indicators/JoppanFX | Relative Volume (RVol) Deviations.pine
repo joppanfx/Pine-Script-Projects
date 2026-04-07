@@ -23,7 +23,7 @@ isBearish = isHighVolume and close <= open
 // --- Watermark ---
 var testTable = table.new(position.bottom_right, 1, 1)
 if barstate.islast
-    table.cell(testTable, 0, 0, "joppanfx", text_color=color.new(color.white, 50), text_size=size.small)
+    table.cell(testTable, 0, 0, "JoppanFX", text_color=color.new(color.white, 50), text_size=size.small)
 
 // --- Plotting ---
 // 1. Bar Coloring
