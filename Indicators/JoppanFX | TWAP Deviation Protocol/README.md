@@ -1,7 +1,7 @@
 # 📕 JoppanFX: TWAP Deviation Protocol
 
 ## 📸 Visual Overview
-![JoppanFX | RVol Deviations Chart Example]([./assets/screenshot.png](https://github.com/joppanfx/Pine-Script-Projects/blob/main/Indicators/JoppanFX%20%7C%20TWAP%20Deviation%20Protocol/Assets/JoppanFX%20%7C%20TWAP%20Deviation%20Protocol.png))
+![JoppanFX | RVol Deviations Chart Example]("./Indicators/JoppanFX | TWAP Deviation Protocol/Assets/JoppanFX | TWAP Deviation Protocol.png")
 
 ## 📌 Overview
 The **JoppanFX: TWAP Deviation Protocol** is a quantitative volatility-tracking tool designed to identify price extremes relative to the **Time Weighted Average Price (TWAP)**.  
