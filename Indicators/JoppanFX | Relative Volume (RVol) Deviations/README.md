@@ -79,7 +79,7 @@ High-volume candles with small bodies (e.g., **Doji**) at key levels suggest **a
 ---
 
 ## 📝 Installation
-1. Copy the source code from the `indicators/` folder  
+1. Copy the source code from the `Indicators/` folder  
 2. Open **Pine Editor** in TradingView  
 3. Paste the code and click **"Add to Chart"**
 
