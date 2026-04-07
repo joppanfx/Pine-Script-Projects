@@ -1,4 +1,4 @@
-# 🩸 JoppanFX: Relative Volume (RVol) Deviations
+# 📕 JoppanFX: Relative Volume (RVol) Deviations
 
 ## 📌 Overview
 The **JoppanFX: Relative Volume (RVol) Deviations** is a quantitative liquidity-tracking tool designed to identify **institutional participation** and **volume anomalies**.
