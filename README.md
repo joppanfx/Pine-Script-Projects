@@ -56,5 +56,5 @@ Quantitative trading involves significant risk.
 ---
 
 ### 🧠 Developed by  
-**JoppanFX QuantDev Solutions**  
+**JoppanFX QuantDev**  
 *Systematic Alpha*
