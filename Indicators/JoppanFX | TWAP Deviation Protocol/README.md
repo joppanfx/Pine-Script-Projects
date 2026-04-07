@@ -1,4 +1,4 @@
-# 📕 JoppanFX: TWAP Deviation Protocol
+# 📕 JoppanFX | TWAP Deviation Protocol
 
 ## 📸 Visual Overview
 ![JoppanFX TWAP Deviation Protocol](./Assets/JoppanFX%20%7C%20TWAP%20Deviation%20Protocol.png)
