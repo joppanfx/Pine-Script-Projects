@@ -17,8 +17,11 @@ showLabels     = input.bool(true, "Show Volume Labels", group=group_vis)
 labelOffset    = input.int(10, "Label Offset (Points)", minval=0, group=group_vis)
 
 // --- Calculations ---
-avgVol       = ta.sma(volume, len)
-isHighVolume = volume > (avgVol * mult)
+meanVol = ta.sma(volume, len)
+stdVol  = ta.stdev(volume, len)
+zScore  = (volume - meanVol) / stdVol
+
+isHighVolume = zScore > mult
 
 // Logic for Bullish vs Bearish candles
 isBullish = isHighVolume and close > open
