@@ -29,15 +29,26 @@ lowerBand  = priceMean - (priceStdev * devMult)
 aboveUpperBand = barstate.isconfirmed and not na(upperBand) and close > upperBand
 belowLowerBand = barstate.isconfirmed and not na(lowerBand) and close < lowerBand
 
-// --- Watermark ---
+// --- Watermark (Compatible High Contrast Fix) ---
 var table wmTable = table.new(position.bottom_right, 1, 1)
+
 if barstate.islast
-    wmColor = color.from_gradient(color.r(chart.bg_color), 0, 255,
-         color.new(color.black, 60),
-         color.new(color.white, 60))
-    table.cell(wmTable, 0, 0, "JoppanFX",
-         text_color=wmColor,
-         text_size=size.small)
+    // Extract RGB channels of the background
+    r = color.r(chart.bg_color)
+    g = color.g(chart.bg_color)
+    b = color.b(chart.bg_color)
+    
+    // Standard formula for perceived brightness (Luminance)
+    // It weights Green the highest because the human eye is more sensitive to it
+    luminance = (0.299 * r + 0.587 * g + 0.114 * b)
+    
+    // If luminance > 127.5 (half of 255), the background is "Light"
+    wmColor = luminance > 127.5 ? color.new(color.black, 40) : color.new(color.white, 40)
+    
+    table.cell(wmTable, 0, 0, "JoppanFX", 
+         text_color = wmColor, 
+         text_size  = size.small, 
+         bgcolor    = color.new(chart.bg_color, 100))
 
 // --- Plotting ---
 p_basis = plot(priceMean,  "Price Mean Basis", color=baseColor,  linewidth=2)
