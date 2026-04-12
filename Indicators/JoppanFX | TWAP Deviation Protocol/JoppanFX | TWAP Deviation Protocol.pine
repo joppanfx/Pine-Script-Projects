@@ -1,52 +1,50 @@
 //@version=6
-// @description JoppanFX | TWAP Deviation Protocol
-// @author JoppanFX
-// @documentation https://github.com/joppanfx/Pine-Script-Projects/tree/main/Indicators/JoppanFX%20%7C%20TWAP%20Deviation%20Protocol
+// @description    JoppanFX | Price Mean Deviation Protocol
+// @author         JoppanFX
+// @documentation  https://github.com/joppanfx/Pine-Script-Projects/tree/main/Indicators/JoppanFX%20%7C%20TWAP%20Deviation%20Protocol
 
-indicator("JoppanFX | TWAP Deviation Protocol", overlay=true)
+indicator("JoppanFX | Price Mean Deviation Protocol", overlay=true, max_bars_back=500)
+
+// --- Constants ---
+G_CORE = "Core Configuration"
+G_VIS  = "Visuals"
 
 // --- Inputs ---
-var group_twap = "TWAP Configuration"
-twapLen        = input.int(48, "TWAP Lookback (Periods)", minval=1, group=group_twap)
-stdDevMult     = input.float(2.0, "Standard Deviation Multiplier", step=0.1, group=group_twap)
-
-var group_vis  = "Visuals"
-baseColor      = input.color(color.gray, "TWAP Baseline", group=group_vis)
-upperColor     = input.color(color.new(#ff0055, 0), "Upper Deviation", group=group_vis)
-lowerColor     = input.color(color.new(#00ff08, 0), "Lower Deviation", group=group_vis)
-showFill       = input.bool(true, "Show Deviation Shading", group=group_vis)
+basisLen    = input.int(48,  "Basis Lookback (Periods)", minval=1,   group=G_CORE)
+devMult     = input.float(2.0, "Deviation Multiplier",  minval=0.1, step=0.1, group=G_CORE)
+baseColor   = input.color(color.gray,                    "Basis Line",          group=G_VIS)
+upperColor  = input.color(color.new(#ff0055, 0),         "Upper Band",          group=G_VIS)
+lowerColor  = input.color(color.new(#00ff08, 0),         "Lower Band",          group=G_VIS)
+showFill    = input.bool(true,                           "Show Band Shading",   group=G_VIS)
 
 // --- Calculations ---
-// 1. Calculate the TWAP (Simple Moving Average of OHLC4 acts as a rolling TWAP)
-twapBasis = ta.sma(ohlc4, twapLen)
+// SMA of ohlc4 approximates a rolling price mean (TWAP proxy on fixed-interval charts only).
+priceMean  = ta.sma(ohlc4, basisLen)
+priceStdev = ta.stdev(ohlc4, basisLen)
 
-// 2. Calculate Standard Deviation
-stdDev = ta.stdev(ohlc4, twapLen)
+upperBand  = priceMean + (priceStdev * devMult)
+lowerBand  = priceMean - (priceStdev * devMult)
 
-// 3. Define Bands
-upperBand = twapBasis + (stdDev * stdDevMult)
-lowerBand = twapBasis - (stdDev * stdDevMult)
-
-// --- Conditions ---
-isOverbought = close > upperBand
-isOversold   = close < lowerBand
+// --- Conditions (na-guarded, confirmed bars only) ---
+aboveUpperBand = barstate.isconfirmed and not na(upperBand) and close > upperBand
+belowLowerBand = barstate.isconfirmed and not na(lowerBand) and close < lowerBand
 
 // --- Watermark ---
-var testTable = table.new(position.bottom_right, 1, 1)
+var table wmTable = table.new(position.bottom_right, 1, 1)
 if barstate.islast
-    table.cell(testTable, 0, 0, "JoppanFX", text_color=color.new(color.white, 50), text_size=size.small)
+    wmColor = color.from_gradient(color.r(chart.bg_color), 0, 255,
+         color.new(color.black, 60),
+         color.new(color.white, 60))
+    table.cell(wmTable, 0, 0, "JoppanFX",
+         text_color=wmColor,
+         text_size=size.small)
 
 // --- Plotting ---
-// Plot the TWAP Core
-p_basis = plot(twapBasis, "TWAP Basis", color=baseColor, linewidth=2)
+p_basis = plot(priceMean,  "Price Mean Basis", color=baseColor,  linewidth=2)
+p_upper = plot(upperBand,  "Upper Band",       color=upperColor, style=plot.style_line)
+p_lower = plot(lowerBand,  "Lower Band",       color=lowerColor, style=plot.style_line)
 
-// Plot the Deviation Bands
-p_upper = plot(upperBand, "Upper Deviation", color=upperColor, style=plot.style_linebr)
-p_lower = plot(lowerBand, "Lower Deviation", color=lowerColor, style=plot.style_linebr)
-
-// Professional Shading
 fill(p_upper, p_basis, color=showFill ? color.new(upperColor, 90) : na, title="Upper Fill")
 fill(p_lower, p_basis, color=showFill ? color.new(lowerColor, 90) : na, title="Lower Fill")
 
-// Highlight Candles on Extreme Deviations
-barcolor(isOverbought ? upperColor : isOversold ? lowerColor : na)
+barcolor(aboveUpperBand ? upperColor : belowLowerBand ? lowerColor : na)
