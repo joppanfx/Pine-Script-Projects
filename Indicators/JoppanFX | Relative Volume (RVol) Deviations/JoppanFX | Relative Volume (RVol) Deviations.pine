@@ -35,10 +35,17 @@ bool isDojiBar = isHighVolume and isDoji
 // --- ATR-Based Label Offset ---
 atrOffset = ta.atr(14) * labelOffset
 
+// --- Dynamic Contrast Logic ---
+r = color.r(chart.bg_color)
+g = color.g(chart.bg_color)
+b = color.b(chart.bg_color)
+luminance = (0.299 * r + 0.587 * g + 0.114 * b)
+dynamicColor = luminance > 127.5 ? color.black : color.white
+
 // --- Watermark ---
 var watermarkTable = table.new(position.bottom_right, 1, 1)
 if barstate.islast
-    table.cell(watermarkTable, 0, 0, "JoppanFX", text_color=color.new(color.white, 50), text_size=size.small)
+    table.cell(watermarkTable, 0, 0, "JoppanFX", text_color=color.new(dynamicColor, 50), text_size=size.small, bgcolor=color.new(chart.bg_color, 100))
 
 // --- Plotting ---
 // 1. Bar Coloring
@@ -59,7 +66,7 @@ if isHighVolume and showLabels
              text=str.format("{0,number,#.#}x", volMultiplier),
              style=labelStyle,
              color=color.new(labelColor, LABEL_TRANSPARENCY),
-             textcolor=color.white,
+             textcolor=dynamicColor,
              size=size.tiny,
              yloc=yloc.price
              )
