@@ -2,49 +2,64 @@
 // @description JoppanFX | Relative Volume (RVol) Deviations
 // @author JoppanFX
 // @documentation https://github.com/joppanfx/Pine-Script-Projects/tree/main/Indicators/JoppanFX%20%7C%20Relative%20Volume%20(RVol)%20Deviations
-
 indicator("JoppanFX | Relative Volume (RVol) Deviations", overlay=true, max_labels_count=500)
 
-// --- Inputs ---
-var group_vol  = "Volume Settings"
-len            = input.int(60, "Lookback Period", minval=1, group=group_vol)
-mult           = input.float(2.5, "Volume Multiplier", step=0.1, group=group_vol)
+// --- Constants ---
+LABEL_TRANSPARENCY = 20
 
-var group_vis  = "Visuals"
-bullColor      = input.color(color.new(#00ff08, 0), "High Vol Bullish", group=group_vis)
-bearColor      = input.color(color.new(#ff0055, 0), "High Vol Bearish", group=group_vis)
-showLabels     = input.bool(true, "Show Volume Labels", group=group_vis)
-labelOffset    = input.int(10, "Label Offset (Points)", minval=0, group=group_vis)
+// --- Inputs ---
+group_vol  = "Volume Settings"
+group_vis  = "Visuals"
+len        = input.int(60, "Lookback Period", minval=1, group=group_vol)
+mult       = input.float(2.5, "Volume Multiplier", step=0.1, minval=0.1, group=group_vol)
+bullColor  = input.color(color.new(#00ff08, 0), "High Vol Bullish", group=group_vis)
+bearColor  = input.color(color.new(#ff0055, 0), "High Vol Bearish", group=group_vis)
+dojiColor  = input.color(color.new(#ffffff, 0), "High Vol Doji (Neutral)", group=group_vis)
+showLabels = input.bool(true, "Show Volume Labels", group=group_vis)
+labelOffset = input.float(0.25, "Label ATR Offset (Multiplier)", minval=0.0, step=0.05, group=group_vis)
+
+// --- Volume Availability Check ---
+bool hasVolume = not na(volume) and volume >= 0
 
 // --- Calculations ---
-avgVol       = ta.sma(volume, len)
-isHighVolume = volume > (avgVol * mult)
+avgVol       = hasVolume ? ta.sma(volume, len) : na
+bool isWarm  = bar_index >= len
+bool isHighVolume = hasVolume and not na(avgVol) and avgVol > 0 and isWarm and volume > (avgVol * mult)
 
-// Logic for Bullish vs Bearish candles
-isBullish = isHighVolume and close > open
-isBearish = isHighVolume and close <= open
+// --- Candle Classification ---
+bool isDoji    = math.abs(close - open) <= syminfo.mintick
+bool isBullish = isHighVolume and close > open and not isDoji
+bool isBearish = isHighVolume and close < open and not isDoji
+bool isDojiBar = isHighVolume and isDoji
+
+// --- ATR-Based Label Offset ---
+atrOffset = ta.atr(14) * labelOffset
 
 // --- Watermark ---
-var testTable = table.new(position.bottom_right, 1, 1)
+var watermarkTable = table.new(position.bottom_right, 1, 1)
 if barstate.islast
-    table.cell(testTable, 0, 0, "JoppanFX", text_color=color.new(color.white, 50), text_size=size.small)
+    table.cell(watermarkTable, 0, 0, "JoppanFX", text_color=color.new(color.white, 50), text_size=size.small)
 
 // --- Plotting ---
 // 1. Bar Coloring
-barcolor(isHighVolume ? (isBullish ? bullColor : bearColor) : na)
+barcolor(isBullish ? bullColor : isBearish ? bearColor : isDojiBar ? dojiColor : na)
 
-// 2. Labels with Fixed Offset
+// 2. Labels with ATR-Based Offset
 if isHighVolume and showLabels
-    volMultiplier = volume / avgVol
-    float offsetPrice = syminfo.mintick * labelOffset
-    
-    label.new(
-         x=bar_index, 
-         y=isBullish ? (low - offsetPrice) : (high + offsetPrice), 
-         text=str.format("{0,number,#.#}x", volMultiplier), 
-         style=isBullish ? label.style_label_up : label.style_label_down,
-         color=color.new(isBullish ? bullColor : bearColor, 20),
-         textcolor=color.white,
-         size=size.tiny,
-         yloc=yloc.price
-         )
+    volMultiplier = avgVol > 0 ? (volume / avgVol) : na
+
+    if not na(volMultiplier)
+        labelStyle = isBullish ? label.style_label_up : isBearish ? label.style_label_down : label.style_label_left
+        labelColor = isBullish ? bullColor : isBearish ? bearColor : dojiColor
+        labelY     = isBullish ? (low - atrOffset) : (high + atrOffset)
+
+        label.new(
+             x=bar_index,
+             y=labelY,
+             text=str.format("{0,number,#.#}x", volMultiplier),
+             style=labelStyle,
+             color=color.new(labelColor, LABEL_TRANSPARENCY),
+             textcolor=color.white,
+             size=size.tiny,
+             yloc=yloc.price
+             )
