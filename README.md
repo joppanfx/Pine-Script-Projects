@@ -1,5 +1,3 @@
-# 📕 JoppanFX | Quant-Driven Trading Protocols
-
 <p align="center">
   <img src="./Assets/JoppanFX.jpg" width="100%" alt="JoppanFX Brand Banner">
 </p>
