@@ -1,10 +1,10 @@
-# 📕 JoppanFX: Quant-Driven Trading Protocols
+# 📕 JoppanFX | Quant-Driven Trading Protocols
 
 <p align="center">
   <img src="./Assets/JoppanFX.jpg" width="100%" alt="JoppanFX Brand Banner">
 </p>
 
-# 📕 JoppanFX: Quant-Driven Trading Protocols
+# 📕 JoppanFX | Quant-Driven Trading Protocols
 
 **JoppanFX** is a quantitative research initiative dedicated to the development of **high-fidelity technical indicators** and **algorithmic trading frameworks**.
 
