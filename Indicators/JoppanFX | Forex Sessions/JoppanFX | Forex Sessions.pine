@@ -4,6 +4,42 @@
 // @documentation https://github.com/joppanfx/Pine-Script-Projects
 
 indicator("JoppanFX | Forex Sessions", overlay=true, max_lines_count=500, max_labels_count=500)
+
+// ─────────────────────────────────────────────
+// --- User Inputs ---
+// ─────────────────────────────────────────────
+
+// Sydney
+syd_grp        = "Sydney Session"
+syd_start_inp  = input.int(21, "Sydney Start Hour (UTC)", minval=0, maxval=23, group=syd_grp)
+syd_end_inp    = input.int(6,  "Sydney End Hour (UTC)",   minval=0, maxval=23, group=syd_grp)
+syd_color      = input.color(color.rgb(255, 192, 203), "Sydney Color", group=syd_grp)
+
+// Tokyo
+tok_grp        = "Tokyo Session"
+tok_start_inp  = input.int(0,  "Tokyo Start Hour (UTC)", minval=0, maxval=23, group=tok_grp)
+tok_end_inp    = input.int(9,  "Tokyo End Hour (UTC)",   minval=0, maxval=23, group=tok_grp)
+tok_color      = input.color(color.rgb(138, 43, 226), "Tokyo Color", group=tok_grp)
+
+// London
+lon_grp        = "London Session"
+lon_start_inp  = input.int(7,  "London Start Hour (UTC)", minval=0, maxval=23, group=lon_grp)
+lon_end_inp    = input.int(16, "London End Hour (UTC)",   minval=0, maxval=23, group=lon_grp)
+lon_color      = input.color(color.yellow, "London Color", group=lon_grp)
+
+// New York
+ny_grp         = "New York Session"
+ny_start_inp   = input.int(12, "New York Start Hour (UTC)", minval=0, maxval=23, group=ny_grp)
+ny_end_inp     = input.int(21, "New York End Hour (UTC)",   minval=0, maxval=23, group=ny_grp)
+ny_color       = input.color(color.blue, "New York Color", group=ny_grp)
+
+// ─────────────────────────────────────────────
+// --- Warning Note ---
+// ─────────────────────────────────────────────
+// NOTE: Session detection is based on UTC hour values only. On sub-hourly timeframes,
+// the first bar of a session may not align exactly with the defined start hour depending
+// on the chart's bar boundaries. This is a known limitation.
+
 // ─────────────────────────────────────────────
 // --- Session Logic (UTC-Based) ---
 // ─────────────────────────────────────────────
@@ -17,10 +53,10 @@ isInSession(startHour, endHour) =>
     result
 
 // --- Session States ---
-syd_in = isInSession(21, 6)
-tok_in = isInSession(0, 9)
-lon_in = isInSession(7, 16)
-ny_in  = isInSession(12, 21)
+syd_in = isInSession(syd_start_inp, syd_end_inp)
+tok_in = isInSession(tok_start_inp, tok_end_inp)
+lon_in = isInSession(lon_start_inp, lon_end_inp)
+ny_in  = isInSession(ny_start_inp,  ny_end_inp)
 
 // --- Session Transitions ---
 syd_start = syd_in and not syd_in[1]
@@ -42,7 +78,7 @@ r = color.r(chart.bg_color)
 g = color.g(chart.bg_color)
 b = color.b(chart.bg_color)
 
-luminance = (0.299 * r + 0.587 * g + 0.114 * b)
+luminance    = (0.299 * r + 0.587 * g + 0.114 * b)
 dynamicColor = luminance > 127.5 ? color.black : color.white
 
 // ─────────────────────────────────────────────
@@ -66,64 +102,72 @@ if barstate.islast
 // ─────────────────────────────────────────────
 
 // Sydney (Pink)
-plotchar(syd_start, "Sydney Start", "", location.abovebar, color(na), text="Sydney Start", textcolor=color.rgb(255, 192, 203), size=size.small)
-plotchar(syd_end,   "Sydney End",   "", location.abovebar, color(na), text="Sydney End",   textcolor=color.rgb(255, 192, 203), size=size.small)
+if syd_start
+    label.new(bar_index, high, "Sydney Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=syd_color, style=label.style_label_down, size=size.small)
+if syd_end
+    label.new(bar_index, high, "Sydney End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=syd_color, style=label.style_label_down, size=size.small)
 
 // Tokyo (Violet)
-plotchar(tok_start, "Tokyo Start", "", location.abovebar, color(na), text="Tokyo Start", textcolor=color.rgb(138, 43, 226), size=size.small)
-plotchar(tok_end,   "Tokyo End",   "", location.abovebar, color(na), text="Tokyo End",   textcolor=color.rgb(138, 43, 226), size=size.small)
+if tok_start
+    label.new(bar_index, high, "Tokyo Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=tok_color, style=label.style_label_down, size=size.small)
+if tok_end
+    label.new(bar_index, high, "Tokyo End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=tok_color, style=label.style_label_down, size=size.small)
 
 // London (Yellow)
-plotchar(lon_start, "London Start", "", location.abovebar, color(na), text="London Start", textcolor=color.yellow, size=size.small)
-plotchar(lon_end,   "London End",   "", location.abovebar, color(na), text="London End",   textcolor=color.yellow, size=size.small)
+if lon_start
+    label.new(bar_index, high, "London Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=lon_color, style=label.style_label_down, size=size.small)
+if lon_end
+    label.new(bar_index, high, "London End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=lon_color, style=label.style_label_down, size=size.small)
 
 // New York (Blue)
-plotchar(ny_start, "New York Start", "", location.abovebar, color(na), text="NewYork Start", textcolor=color.blue, size=size.small)
-plotchar(ny_end,   "New York End",   "", location.abovebar, color(na), text="NewYork End",   textcolor=color.blue, size=size.small)
+if ny_start
+    label.new(bar_index, high, "NewYork Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=ny_color, style=label.style_label_down, size=size.small)
+if ny_end
+    label.new(bar_index, high, "NewYork End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=ny_color, style=label.style_label_down, size=size.small)
 
 // ─────────────────────────────────────────────
 // --- Session Boxes (Dynamic Range Tracking) ---
 // ─────────────────────────────────────────────
 draw_session_box(start, end, inside, clr) =>
-    var box  b        = na
-    var float hi      = na
-    var float lo      = na
-    var line v_start  = na
-    var line v_end    = na
+    var box   sess_box = na
+    var float hi       = na
+    var float lo       = na
+    var line  v_start  = na
+    var line  v_end    = na
 
     // --- Session Start ---
     if start
-        hi := high
-        lo := low
-        b := box.new(left=bar_index, right=bar_index, top=hi, bottom=lo, bgcolor=color.new(clr, 85), border_width=0)
-        v_start := line.new(bar_index, hi, bar_index, lo, color=clr, width=1)
+        hi        := high
+        lo        := low
+        sess_box  := box.new(left=bar_index, right=bar_index, top=hi, bottom=lo, bgcolor=color.new(clr, 85), border_width=0)
+        v_start   := line.new(bar_index, hi, bar_index, lo, color=clr, width=1)
 
     // --- Expand While Inside ---
-    if inside and not na(b)
+    if inside and not na(sess_box)
         hi := math.max(high, hi)
         lo := math.min(low, lo)
-        box.set_right(b, bar_index)
-        box.set_top(b, hi)
-        box.set_bottom(b, lo)
+        box.set_right(sess_box, bar_index)
+        box.set_top(sess_box, hi)
+        box.set_bottom(sess_box, lo)
 
         if not na(v_start)
             line.set_y1(v_start, hi)
             line.set_y2(v_start, lo)
 
     // --- Session End ---
-    if end and not na(b)
-        box.set_right(b, bar_index)
-        v_end := line.new(bar_index, hi, bar_index, lo, color=clr, width=1)
+    if end and not na(sess_box)
+        box.set_right(sess_box, bar_index)
+        v_end    := line.new(bar_index, hi, bar_index, lo, color=clr, width=1)
 
-        b  := na
-        hi := na
-        lo := na
+        sess_box := na
+        hi       := na
+        lo       := na
 
 // --- Draw Session Boxes ---
-draw_session_box(syd_start, syd_end, syd_in, color.rgb(255, 192, 203))
-draw_session_box(tok_start, tok_end, tok_in, color.rgb(138, 43, 226))
-draw_session_box(lon_start, lon_end, lon_in, color.yellow)
-draw_session_box(ny_start,  ny_end,  ny_in,  color.blue)
+draw_session_box(syd_start, syd_end, syd_in, syd_color)
+draw_session_box(tok_start, tok_end, tok_in, tok_color)
+draw_session_box(lon_start, lon_end, lon_in, lon_color)
+draw_session_box(ny_start,  ny_end,  ny_in,  ny_color)
 
 // ─────────────────────────────────────────────
 // --- Session High/Low Tracking ---
@@ -173,7 +217,7 @@ calc_hl(bool start, bool end, bool inside, color clr) =>
         label.set_xy(lbl_lo, bar_index, lo)
 
 // --- Execute High/Low Tracking ---
-calc_hl(syd_start, syd_end, syd_in, color.rgb(255, 192, 203))
-calc_hl(tok_start, tok_end, tok_in, color.rgb(138, 43, 226))
-calc_hl(lon_start, lon_end, lon_in, color.yellow)
-calc_hl(ny_start,  ny_end,  ny_in,  color.blue)
+calc_hl(syd_start, syd_end, syd_in, syd_color)
+calc_hl(tok_start, tok_end, tok_in, tok_color)
+calc_hl(lon_start, lon_end, lon_in, lon_color)
+calc_hl(ny_start,  ny_end,  ny_in,  ny_color)
