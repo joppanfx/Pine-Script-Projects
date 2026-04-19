@@ -103,27 +103,27 @@ if barstate.islast
 
 // Sydney (Pink)
 if syd_start
-    label.new(bar_index, high, "Sydney Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=syd_color, style=label.style_label_down, size=size.small)
+    label.new(bar_index, high, "Sydney Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=syd_color, style=label.style_label_down, size=size.normal)
 if syd_end
-    label.new(bar_index, high, "Sydney End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=syd_color, style=label.style_label_down, size=size.small)
+    label.new(bar_index, high, "Sydney End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=syd_color, style=label.style_label_down, size=size.normal)
 
 // Tokyo (Violet)
 if tok_start
-    label.new(bar_index, high, "Tokyo Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=tok_color, style=label.style_label_down, size=size.small)
+    label.new(bar_index, high, "Tokyo Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=tok_color, style=label.style_label_down, size=size.normal)
 if tok_end
-    label.new(bar_index, high, "Tokyo End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=tok_color, style=label.style_label_down, size=size.small)
+    label.new(bar_index, high, "Tokyo End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=tok_color, style=label.style_label_down, size=size.normal)
 
 // London (Yellow)
 if lon_start
-    label.new(bar_index, high, "London Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=lon_color, style=label.style_label_down, size=size.small)
+    label.new(bar_index, high, "London Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=lon_color, style=label.style_label_down, size=size.normal)
 if lon_end
-    label.new(bar_index, high, "London End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=lon_color, style=label.style_label_down, size=size.small)
+    label.new(bar_index, high, "London End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=lon_color, style=label.style_label_down, size=size.normal)
 
 // New York (Blue)
 if ny_start
-    label.new(bar_index, high, "NewYork Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=ny_color, style=label.style_label_down, size=size.small)
+    label.new(bar_index, high, "NewYork Start", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=ny_color, style=label.style_label_down, size=size.normal)
 if ny_end
-    label.new(bar_index, high, "NewYork End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=ny_color, style=label.style_label_down, size=size.small)
+    label.new(bar_index, high, "NewYork End", xloc=xloc.bar_index, yloc=yloc.abovebar, color=color(na), textcolor=ny_color, style=label.style_label_down, size=size.normal)
 
 // ─────────────────────────────────────────────
 // --- Session Boxes (Dynamic Range Tracking) ---
