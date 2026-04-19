@@ -35,7 +35,7 @@ The indicator operates on a deterministic, UTC-based session model with three pr
 
 ### 1. Session Membership Logic
 
-Each bar is classified based on whether its timestamp falls within predefined session windows:
+Each bar is classified based on whether its timestamp falls within the configured session windows:
 
 $$
 \text{Session Active} =
@@ -47,8 +47,10 @@ $$
 
 Where:
 - $h$ = current hour (UTC)
-- $S$ = session start hour
-- $E$ = session end hour
+- $S$ = session start hour (user-configurable)
+- $E$ = session end hour (user-configurable)
+
+> ⚠️ **Note:** Session detection is based on UTC **hour values only**. On sub-hourly timeframes, the first bar of a session may not align exactly with the defined start hour depending on the chart's bar boundaries. This is a known limitation.
 
 ---
 
@@ -91,7 +93,9 @@ This allows real-time construction of:
 
 ## 🧩 Session Classification
 
-| Session | Time (UTC) | Color | Market Context |
+The table below reflects the **default** session configuration. All session times and colors are fully configurable via the indicator's input settings.
+
+| Session | Default Time (UTC) | Default Color | Market Context |
 |--------|-----------|------|----------------|
 | **Sydney** | 21 → 06 | Pink | Low liquidity / accumulation phase |
 | **Tokyo** | 00 → 09 | Violet | Asian range formation |
@@ -110,7 +114,8 @@ This indicator is engineered with robust safeguards to ensure consistent behavio
 All session calculations are strictly based on **UTC time**, eliminating discrepancies caused by:
 - Broker server time differences
 - Chart timezone settings
-- Daylight Saving Time (DST) shifts
+
+> ⚠️ **DST Notice:** Daylight Saving Time shifts are **not handled automatically**. Users are responsible for adjusting session start/end hours via the input settings during DST transitions (e.g., New York shifts between UTC 12:00 and 13:00 depending on the time of year).
 
 ---
 
@@ -168,7 +173,10 @@ Ensures consistent readability across all themes.
   Accurate labeling of session boundaries using state transitions.
 
 - **Live High/Low Tracking**
-  Continuously updated session extremes with visual labels.
+  Continuously updated session extremes with horizontal level lines.
+
+- **Fully Configurable Sessions**
+  Each session's start time, end time, and color can be independently adjusted via the indicator settings panel.
 
 - **Cross-Market Compatibility**
   Works seamlessly across forex, indices, crypto, and equities.
@@ -183,12 +191,24 @@ Ensures consistent readability across all themes.
 
 ## ⚙️ Input Parameters
 
-This indicator is designed for **zero-configuration deployment**.
+Each session exposes three configurable inputs, grouped by session in the indicator settings panel:
 
-All session definitions are internally standardized using UTC, ensuring:
-- Consistency across users
-- Elimination of configuration errors
-- Immediate usability
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **Sydney Start Hour (UTC)** | Hour the Sydney session opens | `21` |
+| **Sydney End Hour (UTC)** | Hour the Sydney session closes | `6` |
+| **Sydney Color** | Box, line, and label color for Sydney | Pink |
+| **Tokyo Start Hour (UTC)** | Hour the Tokyo session opens | `0` |
+| **Tokyo End Hour (UTC)** | Hour the Tokyo session closes | `9` |
+| **Tokyo Color** | Box, line, and label color for Tokyo | Violet |
+| **London Start Hour (UTC)** | Hour the London session opens | `7` |
+| **London End Hour (UTC)** | Hour the London session closes | `16` |
+| **London Color** | Box, line, and label color for London | Yellow |
+| **New York Start Hour (UTC)** | Hour the New York session opens | `12` |
+| **New York End Hour (UTC)** | Hour the New York session closes | `21` |
+| **New York Color** | Box, line, and label color for New York | Blue |
+
+> All hours are interpreted as **UTC**. To account for DST, simply update the relevant start/end inputs accordingly.
 
 ---
 
