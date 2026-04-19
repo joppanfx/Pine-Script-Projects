@@ -6,7 +6,7 @@
 ---
 
 ## 📌 Overview
-The **JoppanFX: Forex Sessions** indicator is a time-structured market framework designed to track **global liquidity cycles** across the four major trading sessions:
+The **JoppanFX | Forex Sessions** indicator is a time-structured market framework designed to track **global liquidity cycles** across the four major trading sessions:
 
 - **Sydney**
 - **Tokyo**
