@@ -46,7 +46,6 @@ b = color.b(chart.bg_color)
 luminance = (0.299 * r + 0.587 * g + 0.114 * b)
 dynamicColor = luminance > 127.5 ? color.black : color.white
 
-
 // ─────────────────────────────────────────────
 // --- Watermark ---
 // ─────────────────────────────────────────────
@@ -62,7 +61,6 @@ if barstate.islast
          text_size=size.small,
          bgcolor=color.new(chart.bg_color, 100)
      )
-
 
 // ─────────────────────────────────────────────
 // --- Visual Markers (Session Start/End Labels) ---
@@ -83,7 +81,6 @@ plotchar(lon_end,   "London End",   "", location.abovebar, color(na), text="Lond
 // New York (Blue)
 plotchar(ny_start, "New York Start", "", location.abovebar, color(na), text="NewYork Start", textcolor=color.blue, size=size.small)
 plotchar(ny_end,   "New York End",   "", location.abovebar, color(na), text="NewYork End",   textcolor=color.blue, size=size.small)
-
 
 // ─────────────────────────────────────────────
 // --- Session Boxes (Dynamic Range Tracking) ---
@@ -123,13 +120,11 @@ draw_session_box(start, end, inside, clr) =>
         hi := na
         lo := na
 
-
 // --- Draw Session Boxes ---
 draw_session_box(syd_start, syd_end, syd_in, color.rgb(255, 192, 203))
 draw_session_box(tok_start, tok_end, tok_in, color.rgb(138, 43, 226))
 draw_session_box(lon_start, lon_end, lon_in, color.yellow)
 draw_session_box(ny_start,  ny_end,  ny_in,  color.blue)
-
 
 // ─────────────────────────────────────────────
 // --- Session High/Low Tracking ---
@@ -177,7 +172,6 @@ calc_hl(bool start, bool end, bool inside, color clr) =>
 
         label.set_xy(lbl_hi, bar_index, hi)
         label.set_xy(lbl_lo, bar_index, lo)
-
 
 // --- Execute High/Low Tracking ---
 calc_hl(syd_start, syd_end, syd_in, color.rgb(255, 192, 203))
