@@ -4,7 +4,6 @@
 // @documentation https://github.com/joppanfx/Pine-Script-Projects
 
 indicator("JoppanFX | Forex Sessions", overlay=true, max_lines_count=500, max_labels_count=500)
-
 // ─────────────────────────────────────────────
 // --- Session Logic (UTC-Based) ---
 // ─────────────────────────────────────────────
