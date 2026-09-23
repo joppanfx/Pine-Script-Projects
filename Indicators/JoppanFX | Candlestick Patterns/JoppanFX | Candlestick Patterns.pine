@@ -1,0 +1,442 @@
+//@version=6
+
+// @description JoppanFX | Candlestick Patterns
+// @author JoppanFX
+// @documentation https://github.com/joppanfx/Pine-Script-Projects
+
+indicator("JoppanFX | Candlestick Patterns", overlay=true, max_labels_count=500)
+
+// ─────────────────────────────────────────────
+// --- Constants
+// ─────────────────────────────────────────────
+
+string GROUP_PATTERNS = "Candlestick Patterns"
+string GROUP_SETTINGS = "Pattern Settings"
+string GROUP_VISUALS  = "Visuals"
+
+// ─────────────────────────────────────────────
+// --- Pattern Display Inputs
+// ─────────────────────────────────────────────
+
+showHammer = input.bool(
+     true,
+     "Hammer (Bullish)",
+     group=GROUP_PATTERNS
+     )
+
+showInvertedHammer = input.bool(
+     true,
+     "Inverted Hammer (Bullish)",
+     group=GROUP_PATTERNS
+     )
+
+showShootingStar = input.bool(
+     true,
+     "Shooting Star (Bearish)",
+     group=GROUP_PATTERNS
+     )
+
+showHangingMan = input.bool(
+     true,
+     "Hanging Man (Bearish)",
+     group=GROUP_PATTERNS
+     )
+
+showBullishEngulfing = input.bool(
+     true,
+     "Bullish Engulfing",
+     group=GROUP_PATTERNS
+     )
+
+showBearishEngulfing = input.bool(
+     true,
+     "Bearish Engulfing",
+     group=GROUP_PATTERNS
+     )
+
+// ─────────────────────────────────────────────
+// --- Pattern Settings
+// ─────────────────────────────────────────────
+
+// --- Trend Context
+
+trendLookback = input.int(
+     3,
+     "Trend Lookback",
+     minval=1,
+     maxval=50,
+     group=GROUP_SETTINGS
+     )
+
+// --- Long Shadow / Body Ratio
+
+longShadowRatio = input.float(
+     2.0,
+     "Long Shadow / Body Ratio",
+     minval=1.0,
+     step=0.1,
+     group=GROUP_SETTINGS
+     )
+
+// --- Maximum Opposite Shadow / Body Ratio
+
+maxOppositeShadowRatio = input.float(
+     0.5,
+     "Maximum Opposite Shadow / Body Ratio",
+     minval=0.0,
+     step=0.1,
+     group=GROUP_SETTINGS
+     )
+
+// --- Minimum Body / Range Ratio
+
+minBodyRangeRatio = input.float(
+     0.05,
+     "Minimum Body / Range Ratio",
+     minval=0.0,
+     maxval=1.0,
+     step=0.01,
+     group=GROUP_SETTINGS
+     )
+
+// --- Engulfing Method
+
+bullishEngulfingMethod = input.string(
+     "Real Body",
+     "Bullish Engulfing Method",
+     options=["Real Body", "Entire Candle"],
+     group=GROUP_SETTINGS
+     )
+
+bearishEngulfingMethod = input.string(
+     "Real Body",
+     "Bearish Engulfing Method",
+     options=["Real Body", "Entire Candle"],
+     group=GROUP_SETTINGS
+     )
+
+// ─────────────────────────────────────────────
+// --- Visual Settings
+// ─────────────────────────────────────────────
+
+hammerColor = input.color(
+     color.green,
+     "Hammer",
+     group=GROUP_VISUALS
+     )
+
+invertedHammerColor = input.color(
+     color.green,
+     "Inverted Hammer",
+     group=GROUP_VISUALS
+     )
+
+shootingStarColor = input.color(
+     color.red,
+     "Shooting Star",
+     group=GROUP_VISUALS
+     )
+
+hangingManColor = input.color(
+     color.red,
+     "Hanging Man",
+     group=GROUP_VISUALS
+     )
+
+bullishEngulfingColor = input.color(
+     color.green,
+     "Bullish Engulfing",
+     group=GROUP_VISUALS
+     )
+
+bearishEngulfingColor = input.color(
+     color.red,
+     "Bearish Engulfing",
+     group=GROUP_VISUALS
+     )
+
+showLabels = input.bool(
+     true,
+     "Show Labels",
+     group=GROUP_VISUALS
+     )
+
+// ─────────────────────────────────────────────
+// --- Candle Measurements
+// ─────────────────────────────────────────────
+
+body = math.abs(close - open)
+
+candleRange = high - low
+
+upperShadow = high - math.max(open, close)
+
+lowerShadow = math.min(open, close) - low
+
+bodyTop = math.max(open, close)
+
+bodyBottom = math.min(open, close)
+
+// ─────────────────────────────────────────────
+// --- Trend Context
+// ─────────────────────────────────────────────
+
+bool downtrend = false
+bool uptrend = false
+
+if bar_index >= trendLookback
+    downtrend := close < close[trendLookback]
+    uptrend := close > close[trendLookback]
+
+// ─────────────────────────────────────────────
+// --- Basic Candle Validation
+// ─────────────────────────────────────────────
+
+bool validBody = candleRange > 0 and body > 0
+
+bool bodySizeValid =
+     validBody and
+     body / candleRange >= minBodyRangeRatio
+
+// ─────────────────────────────────────────────
+// --- Hammer Structure
+// ─────────────────────────────────────────────
+
+bool hammerStructure =
+     bodySizeValid and
+     lowerShadow >= body * longShadowRatio and
+     upperShadow <= body * maxOppositeShadowRatio and
+     bodyTop >= low + candleRange * 0.5
+
+bool hammerPattern =
+     showHammer and
+     downtrend and
+     hammerStructure
+
+// ─────────────────────────────────────────────
+// --- Inverted Hammer Structure
+// ─────────────────────────────────────────────
+
+bool invertedHammerStructure =
+     bodySizeValid and
+     upperShadow >= body * longShadowRatio and
+     lowerShadow <= body * maxOppositeShadowRatio and
+     bodyBottom <= low + candleRange * 0.5
+
+bool invertedHammerPattern =
+     showInvertedHammer and
+     downtrend and
+     invertedHammerStructure
+
+// ─────────────────────────────────────────────
+// --- Shooting Star Structure
+// ─────────────────────────────────────────────
+
+bool shootingStarStructure =
+     bodySizeValid and
+     upperShadow >= body * longShadowRatio and
+     lowerShadow <= body * maxOppositeShadowRatio and
+     bodyBottom <= low + candleRange * 0.5
+
+bool shootingStarPattern =
+     showShootingStar and
+     uptrend and
+     shootingStarStructure
+
+// ─────────────────────────────────────────────
+// --- Hanging Man Structure
+// ─────────────────────────────────────────────
+
+bool hangingManStructure =
+     bodySizeValid and
+     lowerShadow >= body * longShadowRatio and
+     upperShadow <= body * maxOppositeShadowRatio and
+     bodyTop >= low + candleRange * 0.5
+
+bool hangingManPattern =
+     showHangingMan and
+     uptrend and
+     hangingManStructure
+
+// ─────────────────────────────────────────────
+// --- Bullish Engulfing
+// ─────────────────────────────────────────────
+
+bool previousBearish =
+     close[1] < open[1]
+
+bool currentBullish =
+     close > open
+
+// --- Real Body Engulfing
+
+bool bullishBodyEngulfs =
+     open <= close[1] and
+     close >= open[1]
+
+// --- Entire Candle Engulfing
+
+bool bullishCandleEngulfs =
+     high >= high[1] and
+     low <= low[1]
+
+// --- Select Engulfing Method
+
+bool bullishEngulfingValid =
+     bullishEngulfingMethod == "Real Body" ?
+     bullishBodyEngulfs :
+     bullishCandleEngulfs
+
+bool bullishEngulfingPattern =
+     showBullishEngulfing and
+     bar_index >= 1 and
+     previousBearish and
+     currentBullish and
+     bullishEngulfingValid
+
+// ─────────────────────────────────────────────
+// --- Bearish Engulfing
+// ─────────────────────────────────────────────
+
+bool previousBullish =
+     close[1] > open[1]
+
+bool currentBearish =
+     close < open
+
+// --- Real Body Engulfing
+
+bool bearishBodyEngulfs =
+     open >= close[1] and
+     close <= open[1]
+
+// --- Entire Candle Engulfing
+
+bool bearishCandleEngulfs =
+     high >= high[1] and
+     low <= low[1]
+
+// --- Select Engulfing Method
+
+bool bearishEngulfingValid =
+     bearishEngulfingMethod == "Real Body" ?
+     bearishBodyEngulfs :
+     bearishCandleEngulfs
+
+bool bearishEngulfingPattern =
+     showBearishEngulfing and
+     bar_index >= 1 and
+     previousBullish and
+     currentBearish and
+     bearishEngulfingValid
+
+// ─────────────────────────────────────────────
+// --- Dynamic Contrast Logic
+// ─────────────────────────────────────────────
+
+r = color.r(chart.bg_color)
+g = color.g(chart.bg_color)
+b = color.b(chart.bg_color)
+
+luminance = 0.299 * r + 0.587 * g + 0.114 * b
+
+dynamicColor = luminance > 127.5 ? color.black : color.white
+
+// ─────────────────────────────────────────────
+// --- Watermark
+// ─────────────────────────────────────────────
+
+var watermarkTable = table.new(position.bottom_right, 1, 1)
+
+if barstate.islast
+    table.cell(
+         watermarkTable,
+         0,
+         0,
+         "JoppanFX",
+         text_color=color.new(dynamicColor, 50),
+         text_size=size.small,
+         bgcolor=color.new(chart.bg_color, 100)
+         )
+
+// ─────────────────────────────────────────────
+// --- Pattern Labels
+// ─────────────────────────────────────────────
+
+if hammerPattern and showLabels
+    label.new(
+         x=bar_index,
+         y=low,
+         text="Hammer",
+         xloc=xloc.bar_index,
+         yloc=yloc.price,
+         style=label.style_label_up,
+         color=hammerColor,
+         textcolor=color.white,
+         size=size.small
+         )
+
+if invertedHammerPattern and showLabels
+    label.new(
+         x=bar_index,
+         y=low,
+         text="Inverted Hammer",
+         xloc=xloc.bar_index,
+         yloc=yloc.price,
+         style=label.style_label_up,
+         color=invertedHammerColor,
+         textcolor=color.white,
+         size=size.small
+         )
+
+if shootingStarPattern and showLabels
+    label.new(
+         x=bar_index,
+         y=high,
+         text="Shooting Star",
+         xloc=xloc.bar_index,
+         yloc=yloc.price,
+         style=label.style_label_down,
+         color=shootingStarColor,
+         textcolor=color.white,
+         size=size.small
+         )
+
+if hangingManPattern and showLabels
+    label.new(
+         x=bar_index,
+         y=high,
+         text="Hanging Man",
+         xloc=xloc.bar_index,
+         yloc=yloc.price,
+         style=label.style_label_down,
+         color=hangingManColor,
+         textcolor=color.white,
+         size=size.small
+         )
+
+if bullishEngulfingPattern and showLabels
+    label.new(
+         x=bar_index,
+         y=low,
+         text="Bullish Engulfing",
+         xloc=xloc.bar_index,
+         yloc=yloc.price,
+         style=label.style_label_up,
+         color=bullishEngulfingColor,
+         textcolor=color.white,
+         size=size.small
+         )
+
+if bearishEngulfingPattern and showLabels
+    label.new(
+         x=bar_index,
+         y=high,
+         text="Bearish Engulfing",
+         xloc=xloc.bar_index,
+         yloc=yloc.price,
+         style=label.style_label_down,
+         color=bearishEngulfingColor,
+         textcolor=color.white,
+         size=size.small
+         )
