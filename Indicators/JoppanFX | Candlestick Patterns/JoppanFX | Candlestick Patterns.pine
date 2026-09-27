@@ -363,80 +363,80 @@ if barstate.islast
 // --- Pattern Labels
 // ─────────────────────────────────────────────
 
-if hammerPattern and showLabels
+if barstate.isconfirmed and hammerPattern and showLabels
     label.new(
-         x=bar_index,
-         y=low,
-         text="Hammer",
-         xloc=xloc.bar_index,
-         yloc=yloc.price,
-         style=label.style_label_up,
-         color=hammerColor,
-         textcolor=color.white,
-         size=size.small
-         )
+        x=bar_index,
+        y=low,
+        text="Hammer",
+        xloc=xloc.bar_index,
+        yloc=yloc.price,
+        style=label.style_label_up,
+        color=hammerColor,
+        textcolor=color.white,
+        size=size.small
+        )
 
-if invertedHammerPattern and showLabels
+if barstate.isconfirmed and invertedHammerPattern and showLabels
     label.new(
-         x=bar_index,
-         y=low,
-         text="Inverted Hammer",
-         xloc=xloc.bar_index,
-         yloc=yloc.price,
-         style=label.style_label_up,
-         color=invertedHammerColor,
-         textcolor=color.white,
-         size=size.small
-         )
+        x=bar_index,
+        y=low,
+        text="Inverted Hammer",
+        xloc=xloc.bar_index,
+        yloc=yloc.price,
+        style=label.style_label_up,
+        color=invertedHammerColor,
+        textcolor=color.white,
+        size=size.small
+        )
 
-if shootingStarPattern and showLabels
+if barstate.isconfirmed and shootingStarPattern and showLabels
     label.new(
-         x=bar_index,
-         y=high,
-         text="Shooting Star",
-         xloc=xloc.bar_index,
-         yloc=yloc.price,
-         style=label.style_label_down,
-         color=shootingStarColor,
-         textcolor=color.white,
-         size=size.small
-         )
+        x=bar_index,
+        y=high,
+        text="Shooting Star",
+        xloc=xloc.bar_index,
+        yloc=yloc.price,
+        style=label.style_label_down,
+        color=shootingStarColor,
+        textcolor=color.white,
+        size=size.small
+        )
 
-if hangingManPattern and showLabels
+if barstate.isconfirmed and hangingManPattern and showLabels
     label.new(
-         x=bar_index,
-         y=high,
-         text="Hanging Man",
-         xloc=xloc.bar_index,
-         yloc=yloc.price,
-         style=label.style_label_down,
-         color=hangingManColor,
-         textcolor=color.white,
-         size=size.small
-         )
+        x=bar_index,
+        y=high,
+        text="Hanging Man",
+        xloc=xloc.bar_index,
+        yloc=yloc.price,
+        style=label.style_label_down,
+        color=hangingManColor,
+        textcolor=color.white,
+        size=size.small
+        )
 
-if bullishEngulfingPattern and showLabels
+if barstate.isconfirmed and bullishEngulfingPattern and showLabels
     label.new(
-         x=bar_index,
-         y=low,
-         text="Bullish Engulfing",
-         xloc=xloc.bar_index,
-         yloc=yloc.price,
-         style=label.style_label_up,
-         color=bullishEngulfingColor,
-         textcolor=color.white,
-         size=size.small
-         )
+        x=bar_index,
+        y=low,
+        text="Bullish Engulfing",
+        xloc=xloc.bar_index,
+        yloc=yloc.price,
+        style=label.style_label_up,
+        color=bullishEngulfingColor,
+        textcolor=color.white,
+        size=size.small
+        )
 
-if bearishEngulfingPattern and showLabels
+if barstate.isconfirmed and bearishEngulfingPattern and showLabels
     label.new(
-         x=bar_index,
-         y=high,
-         text="Bearish Engulfing",
-         xloc=xloc.bar_index,
-         yloc=yloc.price,
-         style=label.style_label_down,
-         color=bearishEngulfingColor,
-         textcolor=color.white,
-         size=size.small
-         )
+        x=bar_index,
+        y=high,
+        text="Bearish Engulfing",
+        xloc=xloc.bar_index,
+        yloc=yloc.price,
+        style=label.style_label_down,
+        color=bearishEngulfingColor,
+        textcolor=color.white,
+        size=size.small
+        )
