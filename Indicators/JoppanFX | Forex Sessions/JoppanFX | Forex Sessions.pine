@@ -11,40 +11,51 @@ indicator("JoppanFX | Forex Sessions", overlay=true, max_lines_count=500, max_la
 
 // Sydney
 syd_grp        = "Sydney Session"
-syd_start_inp  = input.int(21, "Sydney Start Hour (UTC)", minval=0, maxval=23, group=syd_grp)
-syd_end_inp    = input.int(6,  "Sydney End Hour (UTC)",   minval=0, maxval=23, group=syd_grp)
+syd_start_inp  = input.int(8,  "Sydney Start Hour (Local)", minval=0, maxval=23, group=syd_grp)
+syd_end_inp    = input.int(17, "Sydney End Hour (Local)",   minval=0, maxval=23, group=syd_grp)
 syd_color      = input.color(color.rgb(255, 192, 203), "Sydney Color", group=syd_grp)
 
 // Tokyo
 tok_grp        = "Tokyo Session"
-tok_start_inp  = input.int(0,  "Tokyo Start Hour (UTC)", minval=0, maxval=23, group=tok_grp)
-tok_end_inp    = input.int(9,  "Tokyo End Hour (UTC)",   minval=0, maxval=23, group=tok_grp)
+tok_start_inp  = input.int(9,  "Tokyo Start Hour (Local)", minval=0, maxval=23, group=tok_grp)
+tok_end_inp    = input.int(18, "Tokyo End Hour (Local)",   minval=0, maxval=23, group=tok_grp)
 tok_color      = input.color(color.rgb(138, 43, 226), "Tokyo Color", group=tok_grp)
 
 // London
 lon_grp        = "London Session"
-lon_start_inp  = input.int(7,  "London Start Hour (UTC)", minval=0, maxval=23, group=lon_grp)
-lon_end_inp    = input.int(16, "London End Hour (UTC)",   minval=0, maxval=23, group=lon_grp)
+lon_start_inp  = input.int(8,  "London Start Hour (Local)", minval=0, maxval=23, group=lon_grp)
+lon_end_inp    = input.int(17, "London End Hour (Local)",   minval=0, maxval=23, group=lon_grp)
 lon_color      = input.color(color.yellow, "London Color", group=lon_grp)
 
 // New York
 ny_grp         = "New York Session"
-ny_start_inp   = input.int(12, "New York Start Hour (UTC)", minval=0, maxval=23, group=ny_grp)
-ny_end_inp     = input.int(21, "New York End Hour (UTC)",   minval=0, maxval=23, group=ny_grp)
+ny_start_inp   = input.int(8,  "New York Start Hour (Local)", minval=0, maxval=23, group=ny_grp)
+ny_end_inp     = input.int(17, "New York End Hour (Local)",   minval=0, maxval=23, group=ny_grp)
 ny_color       = input.color(color.blue, "New York Color", group=ny_grp)
+
+// ─────────────────────────────────────────────
+// --- Session Timezones ---
+// ─────────────────────────────────────────────
+
+syd_timezone = "Australia/Sydney"
+tok_timezone = "Asia/Tokyo"
+lon_timezone = "Europe/London"
+ny_timezone  = "America/New_York"
 
 // ─────────────────────────────────────────────
 // --- Warning Note ---
 // ─────────────────────────────────────────────
-// NOTE: Session detection is based on UTC hour values only. On sub-hourly timeframes,
-// the first bar of a session may not align exactly with the defined start hour depending
-// on the chart's bar boundaries. This is a known limitation.
+// NOTE: Session detection is based on each session's local timezone.
+// Daylight Saving Time is automatically handled by the IANA timezone
+// database used by TradingView. On sub-hourly timeframes, the first
+// bar of a session may not align exactly with the defined start hour
+// depending on the chart's bar boundaries. This is a known limitation.
 
 // ─────────────────────────────────────────────
-// --- Session Logic (UTC-Based) ---
+// --- Session Logic (Timezone-Aware) ---
 // ─────────────────────────────────────────────
-isInSession(startHour, endHour) =>
-    h = hour(time, "UTC")
+isInSession(startHour, endHour, timezone) =>
+    h = hour(time, timezone)
     bool result = false
     if startHour < endHour
         result := (h >= startHour and h < endHour)
@@ -53,10 +64,10 @@ isInSession(startHour, endHour) =>
     result
 
 // --- Session States ---
-syd_in = isInSession(syd_start_inp, syd_end_inp)
-tok_in = isInSession(tok_start_inp, tok_end_inp)
-lon_in = isInSession(lon_start_inp, lon_end_inp)
-ny_in  = isInSession(ny_start_inp,  ny_end_inp)
+syd_in = isInSession(syd_start_inp, syd_end_inp, syd_timezone)
+tok_in = isInSession(tok_start_inp, tok_end_inp, tok_timezone)
+lon_in = isInSession(lon_start_inp, lon_end_inp, lon_timezone)
+ny_in  = isInSession(ny_start_inp,  ny_end_inp,  ny_timezone)
 
 // --- Session Transitions ---
 syd_start = syd_in and not syd_in[1]
